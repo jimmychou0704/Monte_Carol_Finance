@@ -1,0 +1,427 @@
+%-----------------------------------------------------------------------------
+% Beginning of journal.tex
+%------------------------------------------------------------------------------
+%
+% AMS-LaTeX version 2 sample file for journals, based on amsart.cls.
+%
+%        ***     DO NOT USE THIS FILE AS A STARTER.      ***
+%        ***  USE THE JOURNAL-SPECIFIC *.TEMPLATE FILE.  ***
+%
+% Replace amsart by the documentclass for the target journal, e.g., tran-l.
+
+
+
+\documentclass[12pt]{amsart}
+\usepackage{amsmath, amsthm, amssymb, tikz-cd}
+\usepackage{xspace}
+\usepackage{rotating,mathtools}
+\usepackage[all,cmtip]{xy}\xyoption{dvips}
+\usepackage[hidelinks]{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset { %
+    language=C++,
+    backgroundcolor=\color{black!5}, % set backgroundcolor
+    %basicstyle=\footnotesize,% basic font setting
+    basicstyle=\ttfamily\color{black},
+  moredelim=**[is][\color{gray}]{@}{@},
+}
+
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{prop}[theorem]{Proposition}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{xca}[theorem]{Exercise}
+
+\theoremstyle{remark}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{fact}[theorem]{Fact}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{question}[theorem]{Question}
+\newtheorem{akn}[theorem]{Acknowledgments}
+\newtheorem{assumption}[theorem]{Assumption}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%              Commutative algebra
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\supp}[1]{\textrm{supp}(#1)}
+\newcommand{\depth}[2]{\textrm{depth}_{#1}({#2})}
+\newcommand{\height}[1]{\textrm{ht}{#1}}
+\newcommand{\grade}[1]{\textrm{grade}(#1)}
+\newcommand{\spec}[1]{\textrm{spec}#1}
+%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%             Sheaf
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\sshf}[1]{\mathcal{O}_{#1}}
+\newcommand{\shf}[1]{\mathcal{#1}}
+\newcommand{\proj}[1]{\textrm{proj}(#1)}
+\newcommand{\prj}[1]{\mathbb{P}^{#1}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\R}{\mathcal{R}}
+\newcommand{\rH}{\mathcal{H}}
+\newcommand{\F}{\mathcal{F}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%             Operations
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\ts}[1]{\otimes_{#1}}
+\newcommand{\iso}{\simeq}
+
+\newcommand{\ch}[1]{\textrm{ch}(#1)} %Character function%
+\newcommand{\pf}[1]{\textrm{pf}(#1)}
+\newcommand{\rk}[1]{\textrm{rank}(#1)}
+\newcommand{\is}[1]{\mathscr{I}_{#1}}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%                      Tilde
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\newcommand{\tX}{\widetilde{X}}
+\newcommand{\tA}{\widetilde{A}}
+\newcommand{\tE}{\widetilde{E}}
+\newcommand{\bX}{\overline{X}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%                     Arrows and Sequencies
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\ra}{\rightarrow}
+\newcommand{\M}{\mathcal{M}}
+\newcommand{\lra}{\longrightarrow}
+\newcommand{\embedding}{\hookrightarrow}
+\newcommand{\map}[3]{#1: #2\rightarrow#3}
+\newcommand{\ses}[3]{0\rightarrow#1\rightarrow#2\rightarrow#3\rightarrow{0}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%                     Dualizing complex
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\oX}{\omega _X^{\bullet}}
+\usepackage{enumerate}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+\hypersetup{
+    colorlinks,
+    linkcolor={blue!50!black},
+    citecolor={green!50!black},
+    urlcolor={red!80!black}
+}
+
+\textwidth= 6.5in
+\textheight=8.75in
+\voffset-.5in
+\hoffset-.75in
+\marginparwidth=56pt
+
+
+
+\begin{document}
+\allowdisplaybreaks
+\tableofcontents
+\title{}
+
+%    Information for first author
+\author{}
+
+
+%    Address of record for the research reported here
+
+\dedicatory{}
+
+\keywords{}
+
+\maketitle
+
+\section{Simulation of Random numbers}
+\subsection{Poisson Distribution}
+
+We use inverse function method.
+First note that Poisson distribution satisfies 
+\begin{equation*}
+P(N= k+1) = P(N= k)\cdot \frac{\lambda}{k+1}
+\end{equation*}
+Then for $U\sim U(0,1)$, 
+\begin{equation*}
+F(k) = P_U(U\le F(k)))
+\end{equation*}
+So we first generate $U$, then find the first $K$ such that $U\le F(k)$.
+
+The pseudo code is the following
+
+\begin{lstlisting}[escapeinside={(*}{*)}]
+p = exp((*$- \lambda$ *))
+F = p
+k = 0
+@/@@/@@  generate u from U(0,1) @  
+while U > F:
+	k += 1
+	p *= (* $\frac{\lambda}{k}$ *)
+	F += p
+return k	
+
+
+\end{lstlisting}
+
+
+
+\section{BSM model}
+
+We assume the stock price satisfies the following SDE, 
+\begin{equation*}
+dS =  S \mu dt + S\sigma dw,
+\end{equation*}
+where $w$ is standard brownian motion.
+By Ito's lemma, we have 
+\begin{equation*}
+S(t) = S(0) e^{(\mu -\frac{1}{2}\sigma ^2)t + \sigma w(t)}.
+\end{equation*}
+So to simulate the discounted stock price $e^{-rt}S(t)$ we need
+ \begin{itemize}
+ \item Current stock price $S(0): $ spot
+ \item expiration date: T
+
+ \item Interest rate $r$: r
+  \item Average return $\mu$: r. Because using risk neutral pricing, we can show $\mu = r$.
+ \item Volatility $\sigma$: vol
+ \item The Brownian motion $w(t)$
+ 
+ \end{itemize}
+
+\subsection{Estimation of $w(t)$}
+
+To create Brownian motion, we begin with symmetric random walk.
+Let 
+\begin{equation*}
+X_k = \begin{cases} +1, & \mbox{if } \mbox{ Head} \\ -1, & \mbox{if } \mbox{Tail} \end{cases}
+\end{equation*}
+and
+\begin{equation*}
+M_t = \sum _{k = 1}^{t} X_k
+\end{equation*}
+To approximate Brownian motion, we define the {\it scaled symmetric random walk} by
+\begin{equation*}
+W^{(n)}(t)= \frac{1}{\sqrt{n}} M_{nt}
+\end{equation*}
+\begin{itemize}
+\item We move more frequently, from $t$ times to $nt$ times in the same period of time $t$.
+\item $E[W^{(n)}(t)]= 0$
+\item Var $W^{(n)}(t)$ =  t
+\item By central limit theorem
+\begin{equation*}
+W^{(n)}(t) =  \frac{1}{\sqrt{n}} M_{nt} = \frac{\sum X_k}{\sqrt{n}} = \sqrt{t}\frac{\sum X_k}{\sqrt{n} \sqrt{t}} \Rightarrow N(0,t)
+\end{equation*}
+\end{itemize}
+
+\section{Jump-Diffusion  model}
+\subsection{General Setup}
+Assuming there are some jumps of the stock price, then the Jump-Diffusion model is 
+\begin{equation*}
+\frac{dS(t)}{S(t-)} = \mu dt +\sigma dW+dJ(t),
+\end{equation*}
+where 
+\begin{equation*}
+S(t-) = \lim _{\tau \rightarrow t^-}S(\tau)
+\end{equation*}
+and   the jump process.
+\begin{equation*}
+J(t) = \sum_{j=1}{\tau_N \le t}(Y_j-1)
+\end{equation*}
+We assume the jumps will happen at 
+\begin{equation*}
+0< \tau_1<\tau_2<\cdots<\tau_N
+\end{equation*}
+and $Y_j$ are random variables with positive values.
+
+To justify the assumption of $Y_j$ note that
+\begin{eqnarray*}
+dJ(t) &=& 0 \mbox{  if }  t  \mbox{ is not equal to any of } \tau_j\\
+&=& Y_j-1 if t = \tau_j 
+\end{eqnarray*}
+Then according to the jump diffusion model 
+\begin{eqnarray*}
+&& S(\tau_j)-S(\tau_j-)=  (Y_j-1)\cdot S(\tau_j-)\\
+&\Rightarrow& \frac{S(\tau_j)}{S(\tau_j-)} = Y_j
+\end{eqnarray*}
+That is, $Y_j$ is the ratio of stock prices before and after the jump.
+
+\begin{prop}
+The solution of the jump diffusion model is 
+\begin{equation*}
+S(t) = S(0)e^{(\mu - \frac{1}{2}\sigma ^2)t +\sigma w  }\prod Y_j
+\end{equation*}
+\end{prop}
+
+\subsection{Specific Assumptions}
+There are two contingent variables involved in the jump diffusion model. The number of jumps,  $N(t)$ and the distributions of the jump ratio, $Y_j$.
+To simplify the model, we made the following assumptions,
+\begin{itemize}
+\item $N(t)$ is a Poisson process with parameter $\lambda$
+\item $Y_j$ are independent to $W(t)$ and $N(t)$,  and i.i.d. to log normal distribution $LN(a, b^2)$
+\end{itemize}
+
+For the Poisson distribution $N(t)$, the inter arrival times $\tau_{j+1}-\tau_j$ are i.i.d. with exponential distribution
+\begin{equation*}
+P(\tau_{j+1}-\tau_j \le t)= 1-e^{-\lambda t}
+\end{equation*}
+
+Since product of log normal is still log normal, we have 
+\begin{equation*}
+\prod_{j=1}^{j=n} Y_j \sim LN(na, nb^2)
+\end{equation*}
+
+Condition on $N(t) = n$, the stock price
+\begin{eqnarray*}
+S(t) &=& S(0)\cdot e^{(\mu-\frac{1}{2}\sigma^2)t +\sigma w(t)}\cdot LN(na, nb^2)\\
+&=& S(0)\cdot LN((\mu -\frac{1}{2}\sigma ^2)t, \sigma^2 t)\cdot LN(na, nb^2)\\
+&=& LN( logS(0)+(\mu - \frac{1}{2}\sigma ^2)t +na, \sigma ^2t+ nb^2)
+\end{eqnarray*}
+
+Let $F_{n,t}(x)$ denote the cdf of $S(t)$, then the unconditional distribution of $S(t)\le x$ is 
+\begin{equation*}
+P(S(t)\le x))= \sum_{n=0}^{\infty} e^{-\lambda t}\frac{(\lambda t)^n}{n!} \cdot F_{n,t}(x)
+\end{equation*}
+
+\subsection{Price of options}
+
+We want the discounted value of the stock is a martingale. Look at the diffusion model
+\begin{equation*}
+\frac{dS(t)}{S(t-)} = \mu dt +\sigma dW+dJ(t),
+\end{equation*}
+Our first guess is that let $\mu = r$ will work because it will cancel the effect of $r$.
+Now we look at $dJ(t)$.
+Note that $J(t)$ is a \textbf{compound Poisson distribution}. Use  total law of expectation we see that 
+\begin{eqnarray*}
+E(J(t)) &=& E(N(t)) E(Y-1)\\
+&=& \lambda t E(Y-1)
+\end{eqnarray*}
+In other words, $J(t)- \lambda t E(Y-1)$ is a martingale. So to make the discounted price of the stock a martingale, we should have
+\begin{equation*}
+\frac{dS(t)}{S(t-)} = r dt +\sigma dW+dJ(t) - \lambda E(Y-1) dt.
+\end{equation*}
+So 
+\begin{equation*}
+\mu = r-\lambda E(Y-1)
+\end{equation*}
+
+\subsection{Simulation Of Stock Price}
+
+We consider the method assuming that $t_i's $ are fixed, the number of jumps in each subintervals follows poisson distribution with 
+$\lambda$ or $\lambda /T$. Here $T$ is the number of subintervals.
+\begin{question}
+How do we estimate $\lambda$?
+\end{question}
+
+
+By the solution of the jump diffusion model, we have the following difference equation
+\begin{equation*}
+S(t_{i+1}) = S(t_i)\cdot e^{(\mu - \frac{1}{2}\sigma ^2)(t_{i+1}-t_i) +\sigma (w(t_{i+1}-w(t_i))  }\prod _{N(t_i)+1}^{N(t_{i+1})}Y_j
+\end{equation*}
+To make it easier for recursion, we let $x(t)= log (S(t))$ then
+\begin{equation*}
+x(t_{i+1}) = x(t_{i}) + (\mu - \frac{1}{2}\sigma ^2)(t_{i+1}-t_i) + \sum _{N(t_i)+1}^{N(t_{i+1})} log(Y_j)
+\end{equation*}
+
+If we assume further that $Y_j$'s are i.i.d. log normal$(a, b^2)$,  and let $N$ be $N(t_{i+1})-N(t_i)$\\
+Then 
+\begin{equation*}
+\sum _{N(t_i)+1}^{N(t_{i+1})} log(Y_j) = aN + \sqrt{N}b\cdot \mbox{normal}(0,1)
+\end{equation*}
+
+
+In this equation, there are three random numbers to be generated, 
+\begin{lstlisting}[escapeinside={(*}{*)}]
+Generate Z_1, Z_2 (*$\sim$*) N(0,1)
+Generate N (*$\sim$*) Poisson((*$\lambda /T$*))
+Generate logY_1+....+logY_N = aN+(*$\sqrt{N}$*)bZ_2 
+\end{lstlisting}
+
+\newpage
+
+\section{Interest Rate Model }
+We actually want to price the price of bonds like the following equation
+\begin{equation*}
+P(t, T) = E_t[e^{-\int ^T_tr(u)du}]
+\end{equation*}
+However there will be too many bonds to price, since different bonds may have different maturity date.
+So instead, we model the interest rate first. 
+Once we have $r(u)$, then the price of the bonds $P(t,T)$ will automatically be no arbitrage. 
+Because the discounted price of $P$ is of the form
+\begin{eqnarray*}
+e^{-\int ^t_0r(u)du}P(t,T) &=& E_t[ e^{-\int ^t_0r(u)du} e^{-\int ^T_tr(u)du} ]\\
+&=& E_t[e^{-\int ^T_0 r(u)du}]\\
+&=& E_t[X]
+\end{eqnarray*}
+where $X$ has nothing to do with $t$. 
+So it will be a martingale. We note that if discounted price is martingale then 
+there is no arbitrage.
+
+
+\subsection{Market price of Risk}
+Here are some facts about market price of risk.\\
+It is a constant $\lambda$ such that 
+\begin{equation}\label{price of risk}
+\frac{\mu -r}{\sigma} = \lambda
+\end{equation}
+
+Choosing a market price of risk is also referred to as choosing a probability measure.
+If we have two financial product $f$ and $g$, such that we choose $\sigma _g$ as $\lambda$, then 
+$\frac{f}{g}$ is a martingale for all $f$. This $g$ is called numeraire, means the method to discount.
+By equation (\ref{price of risk}), we have 
+\begin{equation*}
+df = (r+\sigma _g \sigma _f)fdt+\sigma_f dw.
+\end{equation*}
+
+
+
+\subsection{Vasicek Model}
+We assume that 
+\begin{equation*}
+dr = a(b-r)dt + \sigma dz
+\end{equation*}
+Since interest rate is not directly tradable, we trade derivatives on bounds (?) 
+Assume the price of the derivative 
+\begin{equation*}
+P_t(T) = V(t, T, r)
+\end{equation*}
+Differentiate it we have 
+\begin{equation*}
+dV = [ V_t +V_r\cdot a(b-r) +\frac{1}{2}\sigma ^2 V_rr ]dt + V_r \sigma dz
+\end{equation*}
+Choosing market price of risk equaling 0 (money market?) by equation (\ref{price of risk}) we have 
+\begin{equation*}
+[ V_t +V_r\cdot a(b-r) +\frac{1}{2}\sigma ^2 V_rr ] = rV
+\end{equation*}
+
+
+\bibliography{bibliography}{}
+\bibliographystyle{skalpha}
+
+\end{document}
+
+%------------------------------------------------------------------------------
+% End of journal.tex
+%------------------------------------------------------------------------------
