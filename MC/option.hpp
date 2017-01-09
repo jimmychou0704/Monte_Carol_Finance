@@ -43,27 +43,37 @@ public:
 
 
 
+/***********************************************
+ 
+ vanilla_option:
+ 1/8: use bridge pattern, so there is no pointer in the class, no need 
+      to obey rules of three.
+ 
+ ***********************************************/
+
+
+
 class vanilla_option: public option{
 public:
-    vanilla_option(payOff2& thePayOff_, double expiry_);
+    vanilla_option(const payOff_bridge& thePayOff_, double expiry_);
     
     virtual double option_pay_off(double spot) const;
     virtual double get_expire() const;
-    virtual ~vanilla_option();
+    //virtual ~vanilla_option();
     
     //copy constructor
-    vanilla_option(const vanilla_option& origin);
+    //vanilla_option(const vanilla_option& origin);
     
     //assignment constructor
-    vanilla_option& operator=(const vanilla_option& orign);
+    //vanilla_option& operator=(const vanilla_option& orign);
     
     double expiry;
 private:
     
     
-    payOff2* payOffPtr;
+    payOff_bridge thePayOff;
     
-    //payOff2& thePayOff;     //thePayOff is an abstract class, co here must be reference
+    
 };
 
 

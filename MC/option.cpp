@@ -21,9 +21,7 @@ double option::option_pay_off(double spot) const{
 
  */
 
-vanilla_option::vanilla_option(payOff2& thePayOff_, double expiry_):  expiry(expiry_){
-
-    payOffPtr = thePayOff_.clone();
+vanilla_option::vanilla_option(const payOff_bridge& thePayOff_, double expiry_):  expiry(expiry_), thePayOff(thePayOff_){
 };
 
 double  vanilla_option::get_expire() const {return expiry;}
@@ -34,10 +32,10 @@ double  vanilla_option::get_expire() const {return expiry;}
 //remember we overload the operator()
 
 double vanilla_option:: option_pay_off(double spot) const {
-    return (*payOffPtr)(spot);
+    return thePayOff(spot);
     
 }
-
+/*
 vanilla_option::~vanilla_option() {
     delete payOffPtr;
 }
@@ -61,5 +59,5 @@ vanilla_option& vanilla_option:: operator=(const vanilla_option& origin){
     return (*this);
     
 }
-
+*/
 
